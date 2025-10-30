@@ -123,19 +123,7 @@ python main.py "笔记风格封面" --grid --grid-color "#CCCCCC" --grid-spacing
 效果示意：
 ![网格背景示例](./outputs/grid.png)
 
-4. **文字高亮 + Emoji**
-
-```bash
-python main.py "小红书封面进行高亮" --highlight "封面" --highlight-color "#FFFF00" --emoji-position bottom --bg-color "#FF6B6B" --text-color "#FFFFFF" --width 360 --height 640 --padding-bottom 200 --output ./outputs/highlight.png --padding-left 20 --padding-right 20
-```
-
-5. **逗号分隔两色（快捷渐变）**
-
-```bash
-python main.py "逗号输入测试" --bg-color "#FF0000,#0000FF" --bg-direction horizontal --output ./outputs/gradient_test.png --width 800 --height 600 --padding 60
-```
-
-6. **Emoji 码点输入与大小比例**
+4. **Emoji 码点输入与大小比例**
 
 ```bash
 python main.py "支持 Unicode 码点输入 🤓" --emoji-code "U+1F913" --emoji-size-scale 0.8 --emoji-position top --font fonts/thin/SmileySans-Oblique.otf --output ./outputs/emoji_nerd_codepoint.png --width 800 --height 600 --padding 60
