@@ -59,33 +59,37 @@
 ## 使用方法
 
 ```bash
-python generate_image.py "你的文字内容" --output outputs/my_image.png
+python main.py "你的文字内容" --output outputs/my_image.png
 ```
 
 ### 常用参数说明
 
-| 参数                                                                          | 说明                      | 默认值                             |
-| --------------------------------------------------------------------------- | ----------------------- | ------------------------------- |
-| `text`                                                                      | 要绘制的文字                  | 必填                              |
-| `--output`                                                                  | 输出图片路径                  | `outputs/generated_image.png`   |
-| `--font`                                                                    | 字体文件路径 (.ttf/.otf/.ttc) | `fonts/ZCOOLKuaiLe-Regular.ttf` |
-| `--width`                                                                   | 图片宽度                    | `1080`                          |
-| `--height`                                                                  | 图片高度                    | `1920`                          |
-| `--bg-color`                                                                | 背景颜色，可传1个或2个，支持渐变       | `white`                         |
-| `--text-color`                                                              | 文字颜色                    | `#333333`                       |
-| `--padding`                                                                 | 默认内边距                   | `100`                           |
-| `--padding-top` / `--padding-bottom` / `--padding-left` / `--padding-right` | 单独设置边距                  | 同 `--padding`                   |
-| `--line-spacing`                                                            | 行间距倍数                   | `1.1`                           |
-| `--align`                                                                   | 文本对齐方式                  | `center`                        |
-| `--max-font-size`                                                           | 最大字体大小                  | `500`                           |
-| `--bold`                                                                    | 是否加粗                    | False                           |
-| `--grid`                                                                    | 是否启用网格背景                | False                           |
-| `--grid-color`                                                              | 网格线颜色                   | `#DDDDDD`                       |
-| `--grid-spacing`                                                            | 网格间距                    | `50`                            |
-| `--highlight`                                                               | 要高亮的文字                  | None                            |
-| `--highlight-color`                                                         | 高亮颜色                    | `#FFEB3B`                       |
-| `--emoji`                                                                   | 要添加的 Emoji              | None                            |
-| `--emoji-position`                                                          | Emoji 位置                | `top`                           |
+| 参数                                                                          | 说明                                                                 | 默认值                              |
+| --------------------------------------------------------------------------- | -------------------------------------------------------------------- | --------------------------------- |
+| `text`                                                                      | 要绘制的文字                                                           | 必填                               |
+| `--output`                                                                  | 输出图片路径                                                           | `outputs/generated_image.png`     |
+| `--font`                                                                    | 字体文件路径 (.ttf/.otf/.ttc)                                           | `fonts/BeiBanChuanSuiXinTi-2.ttf` |
+| `--width`                                                                   | 图片宽度                                                               | `1080`                            |
+| `--height`                                                                  | 图片高度                                                               | `1920`                            |
+| `--bg-color`                                                                | 背景颜色：可传 1 个（纯色）或 2 个（渐变）。也支持单字符串用逗号分隔两色 | `white`                           |
+| `--bg-direction`                                                            | 渐变方向：`vertical` 或 `horizontal`                                   | `vertical`                        |
+| `--text-color`                                                              | 文字颜色                                                               | `#333333`                         |
+| `--padding`                                                                 | 默认内边距                                                             | `100`                             |
+| `--padding-top` / `--padding-bottom` / `--padding-left` / `--padding-right` | 单独设置边距                                                           | 同 `--padding`                     |
+| `--line-spacing`                                                            | 行间距倍数                                                             | `1.1`                             |
+| `--align`                                                                   | 文本对齐方式：`left` / `center` / `right`                              | `center`                          |
+| `--max-font-size`                                                           | 最大字体大小                                                           | `500`                             |
+| `--bold`                                                                    | 是否加粗                                                               | False                              |
+| `--grid`                                                                    | 是否启用网格背景                                                        | False                              |
+| `--grid-color`                                                              | 网格线颜色                                                             | `#DDDDDD`                         |
+| `--grid-spacing`                                                            | 网格间距                                                               | `50`                              |
+| `--highlight`                                                               | 要高亮的文字（原文中的子串，支持跨行）                                      | None                               |
+| `--highlight-color`                                                         | 高亮颜色                                                               | `#FFEB3B`                         |
+| `--emoji`                                                                   | 要添加的 Emoji（直接字符或普通文本）                                        | None                               |
+| `--emoji-code`                                                              | Emoji 的 Unicode 码点（如 `1F913` 或 `U+1F913`）                         | None                               |
+| `--emoji-position`                                                          | Emoji 位置：`top` 或 `bottom`                                           | `top`                              |
+| `--emoji-font`                                                              | 指定 Emoji 字体文件路径                                                  | None                               |
+| `--emoji-size-scale`                                                        | Emoji 字体大小相对 `--max-font-size` 的比例                               | `0.8`                              |
 
 ---
 
@@ -94,7 +98,7 @@ python generate_image.py "你的文字内容" --output outputs/my_image.png
 1. **单色背景封面**
 
 ```bash
-python generate_image.py "今日分享" --bg-color "#FF6B6B" --text-color "#FFFFFF" --bold --output ./outputs/monochrome.png --width 360 --height 640 --padding-bottom 300
+python main.py "今日分享" --bg-color "#FF6B6B" --text-color "#FFFFFF" --bold --output ./outputs/monochrome.png --width 360 --height 640 --padding-bottom 300
 ```
 
 
@@ -104,7 +108,7 @@ python generate_image.py "今日分享" --bg-color "#FF6B6B" --text-color "#FFFF
 2. **渐变背景封面**
 
 ```bash
-python generate_image.py "渐变封面" --bg-color "#FFB347" "#FFCC33" --text-color "#333333" --bold --width 360 --height 640 --padding-bottom 300 --output ./outputs/gradient_background.png
+python main.py "渐变封面" --bg-color "#0099ff" "#06acff" --bg-direction horizontal --text-color "#333333" --bold --width 360 --height 640 --padding-bottom 300 --output ./outputs/gradient_direction_test.png
 ```
 
 效果示意：
@@ -113,7 +117,7 @@ python generate_image.py "渐变封面" --bg-color "#FFB347" "#FFCC33" --text-co
 3. **网格笔记风格**
 
 ```bash
-python generate_image.py "笔记风格封面" --grid --grid-color "#CCCCCC" --grid-spacing 40 --text-color "#333333" --width 360 --height 640 --padding-bottom 200 --output ./outputs/grid.png
+python main.py "笔记风格封面" --grid --grid-color "#CCCCCC" --grid-spacing 40 --text-color "#333333" --width 360 --height 640 --padding-bottom 200 --output ./outputs/grid.png
 ```
 
 效果示意：
@@ -122,7 +126,19 @@ python generate_image.py "笔记风格封面" --grid --grid-color "#CCCCCC" --gr
 4. **文字高亮 + Emoji**
 
 ```bash
- python generate_image.py "小红书封面进行高亮" --highlight "封面" --highlight-color "#FFFF00" --emoji-position bottom --bg-color "#FF6B6B" --text-color "#FFFFFF" --width 360 --height 640 --padding-bottom 200 --output ./outputs/highlight.png --padding-left 20 --padding-right 20
+python main.py "小红书封面进行高亮" --highlight "封面" --highlight-color "#FFFF00" --emoji-position bottom --bg-color "#FF6B6B" --text-color "#FFFFFF" --width 360 --height 640 --padding-bottom 200 --output ./outputs/highlight.png --padding-left 20 --padding-right 20
+```
+
+5. **逗号分隔两色（快捷渐变）**
+
+```bash
+python main.py "逗号输入测试" --bg-color "#FF0000,#0000FF" --bg-direction horizontal --output ./outputs/gradient_test.png --width 800 --height 600 --padding 60
+```
+
+6. **Emoji 码点输入与大小比例**
+
+```bash
+python main.py "支持 Unicode 码点输入 🤓" --emoji-code "U+1F913" --emoji-size-scale 0.8 --emoji-position top --font fonts/thin/SmileySans-Oblique.otf --output ./outputs/emoji_nerd_codepoint.png --width 800 --height 600 --padding 60
 ```
 
 效果示意：
@@ -147,8 +163,9 @@ python generate_image.py "笔记风格封面" --grid --grid-color "#CCCCCC" --gr
 
 1. 文字过长时字体会自动缩小，但可能仍无法完全显示，请适当增加图片尺寸。
 2. 高亮文字支持跨行，但需确保子文字在原文中存在。
-3. Emoji 渲染依赖系统字体，部分系统可能显示为方块。
-4. 输出目录默认 `outputs/`，生成 PNG 图片。
+3. 文本支持 `\n` 转义为换行（例如 `"第一行\n第二行"`）。
+4. Emoji 渲染依赖字体：macOS 优先使用 `Apple Color Emoji.ttc`，也可指定 `--emoji-font` 或使用项目内 `fonts/EmojiOneColor-SVGinOT.ttf` 以避免乱码。若字符输入仍显示为方块，可改用 `--emoji-code`。
+5. 输出目录默认 `outputs/`，生成 PNG 图片。
 
 
 ## 贡献

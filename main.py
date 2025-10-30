@@ -4,7 +4,14 @@ import argparse
 import re
 
 def create_gradient_background(image_size, color1, color2, direction='vertical'):
-    """Creates a gradient background with RGBA support."""
+    """Creates a gradient background with RGBA support.
+
+    Args:
+        image_size (tuple): (width, height)
+        color1 (str|tuple): start color
+        color2 (str|tuple): end color
+        direction (str): 'vertical' or 'horizontal'
+    """
     width, height = image_size
     
     # 将颜色转换为RGBA格式，支持透明度
@@ -14,16 +21,16 @@ def create_gradient_background(image_size, color1, color2, direction='vertical')
             r = int(color[1:3], 16)
             g = int(color[3:5], 16)
             b = int(color[5:7], 16)
-            return (r, g, b, 180)  # 设置透明度为180（淡淡的颜色）
+            return (r, g, b, 255)  # 默认不透明
         elif isinstance(color, tuple) and len(color) == 3:
             # 如果是RGB元组，转换为RGBA
-            return color + (180,)  # 添加透明度
+            return color + (255,)  # 添加不透明度
         elif isinstance(color, tuple) and len(color) == 4:
             # 已经是RGBA格式
             return color
         else:
             # 其他情况，返回淡淡的默认颜色
-            return (255, 255, 255, 180)
+            return (255, 255, 255, 255)
     
     color1_rgba = ensure_rgba(color1)
     color2_rgba = ensure_rgba(color2)
@@ -50,13 +57,13 @@ def create_gradient_background(image_size, color1, color2, direction='vertical')
         base.paste(top, (0, 0), mask)
         return base
 
-def create_grid_background(image_size, bg_color='white', grid_color='#DDDDDD', grid_spacing=50):
+def create_grid_background(image_size, bg_color='white', grid_color='#DDDDDD', grid_spacing=50, direction='vertical'):
     """Creates a grid background similar to notes app."""
     width, height = image_size
     
     # 创建背景
     if isinstance(bg_color, (list, tuple)) and len(bg_color) == 2:
-        image = create_gradient_background(image_size, bg_color[0], bg_color[1])
+        image = create_gradient_background(image_size, bg_color[0], bg_color[1], direction)
     else:
         color = bg_color[0] if isinstance(bg_color, (list, tuple)) else bg_color
         # 创建RGBA模式的图像以支持透明度
@@ -79,7 +86,8 @@ def create_image_with_text(text, width, height, font_path, text_color, bg_color,
                       line_spacing=1.1, align='center', max_font_size=500, bold=False, 
                       grid=False, grid_color="#DDDDDD", grid_spacing=50, 
                       highlight_text=None, highlight_color="#FFEB3B",
-                      emoji=None, emoji_position="top"):
+                      emoji=None, emoji_position="top", emoji_font_path=None, emoji_size_scale=0.8,
+                      emoji_code=None):
     """
     Create an image with text.
     
@@ -102,10 +110,14 @@ def create_image_with_text(text, width, height, font_path, text_color, bg_color,
         grid (bool): Whether to add grid background like notes app.
         grid_color (str): Color of grid lines.
         grid_spacing (int): Spacing between grid lines.
+        bg_direction (str): Gradient direction ('vertical' or 'horizontal').
         highlight_text (str): Text to highlight (substring of main text).
         highlight_color (str): Color for highlighted text.
         emoji (str): Emoji to add to the image.
         emoji_position (str): Position of the emoji ('top' or 'bottom').
+        emoji_font_path (str): Path to a specific emoji font file.
+        emoji_size_scale (float): Emoji size relative to max_font_size (default 0.8).
+        emoji_code (str): Unicode code point for emoji (e.g., '1F913' or 'U+1F913').
     
     Returns:
         PIL.Image.Image: The generated image.
@@ -123,10 +135,16 @@ def create_image_with_text(text, width, height, font_path, text_color, bg_color,
     image_size = (width, height)
     
     # 1. Create background
+    # 允许 bg_color 传入单字符串包含逗号，例如 "#FF0000,#0000FF"
+    if isinstance(bg_color, str) and ',' in bg_color:
+        parts = [p.strip() for p in bg_color.split(',') if p.strip()]
+        if len(parts) >= 2:
+            bg_color = parts[:2]
+
     if grid:
-        image = create_grid_background(image_size, bg_color, grid_color, grid_spacing)
+        image = create_grid_background(image_size, bg_color, grid_color, grid_spacing, direction=getattr(create_image_with_text, '_bg_direction', 'vertical'))
     elif isinstance(bg_color, (list, tuple)) and len(bg_color) == 2:
-        image = create_gradient_background(image_size, bg_color[0], bg_color[1])
+        image = create_gradient_background(image_size, bg_color[0], bg_color[1], direction=getattr(create_image_with_text, '_bg_direction', 'vertical'))
     else:
         color = bg_color[0] if isinstance(bg_color, (list, tuple)) else bg_color
         # 使用RGBA模式以支持半透明高亮
@@ -213,25 +231,58 @@ def create_image_with_text(text, width, height, font_path, text_color, bg_color,
     y = padding_top + (image_size[1] - padding_top - padding_bottom - total_text_height) / 2
 
     # 添加emoji字体加载器（优先使用系统Apple Color Emoji字体）
-    def _load_emoji_font(size):
+    def _load_emoji_font(size, path_override=None):
+        # 优先使用用户指定的 emoji 字体
+        if path_override and os.path.exists(path_override):
+            # 尝试直接加载；部分环境下 .ttc 需要 index 选项
+            try:
+                return ImageFont.truetype(path_override, size)
+            except Exception:
+                try:
+                    return ImageFont.truetype(path_override, size, index=0)
+                except Exception:
+                    pass
+        # 回退到系统常见的彩色或兼容 emoji 字体
         candidates = [
-            "/System/Library/Fonts/Apple Color Emoji.ttc",
+            "/System/Library/Fonts/Apple Color Emoji.ttc",  # macOS 彩色 emoji（SBIX）
             "/Library/Fonts/Apple Color Emoji.ttc",
-            "/System/Library/Fonts/Supplemental/Arial Unicode.ttf",
+            "/System/Library/Fonts/Supplemental/Arial Unicode.ttf",  # 兼容大量符号（单色）
+            "/Library/Fonts/NotoColorEmoji.ttf",             # 如果安装了 Noto Color Emoji（COLR/CPAL）
+            os.path.join(os.getcwd(), "fonts", "EmojiOneColor-SVGinOT.ttf"),  # 项目内提供的彩色/兼容字体
         ]
         for p in candidates:
             if os.path.exists(p):
                 try:
                     return ImageFont.truetype(p, size)
                 except Exception:
-                    continue
+                    try:
+                        return ImageFont.truetype(p, size, index=0)
+                    except Exception:
+                        continue
         return ImageFont.load_default()
 
     # 添加emoji（如果有）
-    if emoji:
-        emoji_font_size = int(max_font_size * 0.8)  # emoji大小为最大字体大小的80%
-        emoji_font = _load_emoji_font(emoji_font_size)
-        emoji_bbox = draw.textbbox((0, 0), emoji, font=emoji_font)
+    # 解析 emoji 内容：优先使用显示字符，其次解析 code point（支持 'U+XXXX' 或十六进制）
+    emoji_char = None
+    if emoji and isinstance(emoji, str):
+        if emoji.upper().startswith("U+"):
+            try:
+                emoji_char = chr(int(emoji[2:], 16))
+            except Exception:
+                emoji_char = emoji
+        else:
+            emoji_char = emoji
+    elif emoji_code:
+        code = emoji_code.upper().replace("U+", "")
+        try:
+            emoji_char = chr(int(code, 16))
+        except Exception:
+            emoji_char = None
+
+    if emoji_char:
+        emoji_font_size = int(max_font_size * float(emoji_size_scale))  # 按比例缩放 emoji 字体大小
+        emoji_font = _load_emoji_font(emoji_font_size, emoji_font_path)
+        emoji_bbox = draw.textbbox((0, 0), emoji_char, font=emoji_font)
         emoji_width = emoji_bbox[2] - emoji_bbox[0]
         emoji_height = emoji_bbox[3] - emoji_bbox[1]
         
@@ -239,12 +290,13 @@ def create_image_with_text(text, width, height, font_path, text_color, bg_color,
             # 在文本上方居中放置emoji
             emoji_x = (image_size[0] - emoji_width) / 2
             emoji_y = padding_top / 2 - emoji_height / 2
-            draw.text((emoji_x, emoji_y), emoji, font=emoji_font, fill=text_color)
+            # 不设置 fill，尽可能保留彩色 emoji 的自带颜色；单色字体默认显示为黑色
+            draw.text((emoji_x, emoji_y), emoji_char, font=emoji_font)
         elif emoji_position == 'bottom':
             # 在文本下方居中放置emoji
             emoji_x = (image_size[0] - emoji_width) / 2
             emoji_y = image_size[1] - padding_bottom / 2 - emoji_height / 2
-            draw.text((emoji_x, emoji_y), emoji, font=emoji_font, fill=text_color)
+            draw.text((emoji_x, emoji_y), emoji_char, font=emoji_font)
 
     # 查找所有需要高亮的区间（支持跨行）
     highlight_spans = []
@@ -329,7 +381,8 @@ def main():
     parser.add_argument("--font", type=str, default="fonts/BeiBanChuanSuiXinTi-2.ttf", help="Path to the .otf or .ttc font file.")
     parser.add_argument("--width", type=int, default=1080, help="Width of the image.")
     parser.add_argument("--height", type=int, default=1920, help="Height of the image.")
-    parser.add_argument("--bg-color", type=str, nargs='+', default=['white'], help="Background color(s). One for solid, two for gradient.")
+    parser.add_argument("--bg-color", type=str, nargs='+', default=['white'], help="Background color(s). One for solid, two for gradient. You can also pass a single string with comma, e.g. '#FF0000,#0000FF'.")
+    parser.add_argument("--bg-direction", type=str, default='vertical', choices=['vertical', 'horizontal'], help="Gradient direction.")
     parser.add_argument("--text-color", type=str, default='#333333', help="Color of the text.")
     parser.add_argument("--padding", type=int, default=100, help="Default padding for all sides.")
     parser.add_argument("--padding-top", type=int, help="Top padding (overrides --padding).")
@@ -347,6 +400,9 @@ def main():
     parser.add_argument("--highlight-color", type=str, default="#FFEB3B", help="Color for highlighted text.")
     parser.add_argument("--emoji", type=str, help="Emoji to add to the image.")
     parser.add_argument("--emoji-position", type=str, default="top", choices=["top", "bottom"], help="Position of the emoji.")
+    parser.add_argument("--emoji-font", type=str, help="Path to the emoji font file.")
+    parser.add_argument("--emoji-size-scale", type=float, default=0.8, help="Emoji size scale relative to max font size.")
+    parser.add_argument("--emoji-code", type=str, help="Unicode code point for emoji, e.g., '1F913' or 'U+1F913'.")
 
     args = parser.parse_args()
 
@@ -358,6 +414,9 @@ def main():
         return
 
     # Create and save the image
+    # 将方向注入到函数以便下游调用（简化传参不破坏函数签名）
+    setattr(create_image_with_text, '_bg_direction', args.bg_direction)
+
     image = create_image_with_text(
         text=args.text,
         width=args.width,
@@ -380,7 +439,10 @@ def main():
         highlight_text=args.highlight,
         highlight_color=args.highlight_color,
         emoji=args.emoji,
-        emoji_position=args.emoji_position
+        emoji_position=args.emoji_position,
+        emoji_font_path=args.emoji_font,
+        emoji_size_scale=args.emoji_size_scale,
+        emoji_code=args.emoji_code
     )
 
     # Ensure output directory exists
