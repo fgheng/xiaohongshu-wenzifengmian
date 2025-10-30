@@ -326,7 +326,7 @@ def main():
     parser = argparse.ArgumentParser(description="Generate an image with text.")
     parser.add_argument("text", type=str, help="Text to draw on the image.")
     parser.add_argument("--output", type=str, default="outputs/generated_image.png", help="Path to save the output image.")
-    parser.add_argument("--font", type=str, default="fonts/ZCOOLKuaiLe-Regular.ttf", help="Path to the .otf or .ttc font file.")
+    parser.add_argument("--font", type=str, default="fonts/BeiBanChuanSuiXinTi-2.ttf", help="Path to the .otf or .ttc font file.")
     parser.add_argument("--width", type=int, default=1080, help="Width of the image.")
     parser.add_argument("--height", type=int, default=1920, help="Height of the image.")
     parser.add_argument("--bg-color", type=str, nargs='+', default=['white'], help="Background color(s). One for solid, two for gradient.")

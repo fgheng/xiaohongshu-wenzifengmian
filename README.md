@@ -2,7 +2,7 @@
 
 本工具可以根据输入文字快速生成适合小红书封面的高质量图片，支持渐变背景、网格背景、文字高亮、Emoji 添加以及动态字体大小调整。适合制作社交媒体封面、笔记封面和海报。
 
-![文字封面](outputs/generated_image.png)
+![文字封面](outputs/highlight.png)
 
 ---
 
@@ -94,7 +94,7 @@ python generate_image.py "你的文字内容" --output outputs/my_image.png
 1. **单色背景封面**
 
 ```bash
-python generate_image.py "今日分享" --bg-color "#FF6B6B" --text-color "#FFFFFF" --bold
+python generate_image.py "今日分享" --bg-color "#FF6B6B" --text-color "#FFFFFF" --bold --output ./outputs/monochrome.png --width 360 --height 640 --padding-bottom 300
 ```
 
 
@@ -104,7 +104,7 @@ python generate_image.py "今日分享" --bg-color "#FF6B6B" --text-color "#FFFF
 2. **渐变背景封面**
 
 ```bash
-python generate_image.py "渐变封面" --bg-color "#FFB347" "#FFCC33" --text-color "#333333" --bold
+python generate_image.py "渐变封面" --bg-color "#FFB347" "#FFCC33" --text-color "#333333" --bold --width 360 --height 640 --padding-bottom 300 --output ./outputs/gradient_background.png
 ```
 
 效果示意：
@@ -113,7 +113,7 @@ python generate_image.py "渐变封面" --bg-color "#FFB347" "#FFCC33" --text-co
 3. **网格笔记风格**
 
 ```bash
-python generate_image.py "笔记风格封面" --grid --grid-color "#CCCCCC" --grid-spacing 40 --text-color "#333333"
+python generate_image.py "笔记风格封面" --grid --grid-color "#CCCCCC" --grid-spacing 40 --text-color "#333333" --width 360 --height 640 --padding-bottom 200 --output ./outputs/grid.png
 ```
 
 效果示意：
@@ -122,7 +122,7 @@ python generate_image.py "笔记风格封面" --grid --grid-color "#CCCCCC" --gr
 4. **文字高亮 + Emoji**
 
 ```bash
-python generate_image.py "小红书封面" --highlight "封面" --highlight-color "#FFFF00" --emoji "🎉" --emoji-position top --bg-color "#FF6B6B" --text-color "#FFFFFF"
+ python generate_image.py "小红书封面进行高亮" --highlight "封面" --highlight-color "#FFFF00" --emoji-position bottom --bg-color "#FF6B6B" --text-color "#FFFFFF" --width 360 --height 640 --padding-bottom 200 --output ./outputs/highlight.png --padding-left 20 --padding-right 20
 ```
 
 效果示意：
