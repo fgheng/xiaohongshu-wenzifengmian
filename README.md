@@ -108,7 +108,7 @@ python generate_image.py "渐变封面" --bg-color "#FFB347" "#FFCC33" --text-co
 ```
 
 效果示意：
-![渐变背景示例](./gradient.png)
+![渐变背景示例](./outputs/gradient.png)
 
 3. **网格笔记风格**
 
