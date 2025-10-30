@@ -97,8 +97,9 @@ python generate_image.py "你的文字内容" --output outputs/my_image.png
 python generate_image.py "今日分享" --bg-color "#FF6B6B" --text-color "#FFFFFF" --bold
 ```
 
+
 效果示意：
-![单色背景示例](https://dummyimage.com/400x600/ff6b6b/ffffff\&text=%E4%BB%8A%E6%97%A5%E5%88%86%E4%BA%AB)
+![单色背景示例](./outputs/monochrome.png)
 
 2. **渐变背景封面**
 
@@ -107,7 +108,7 @@ python generate_image.py "渐变封面" --bg-color "#FFB347" "#FFCC33" --text-co
 ```
 
 效果示意：
-![渐变背景示例](https://dummyimage.com/400x600/ffb347/333333\&text=%E6%B8%90%E5%8F%98%E5%B0%81%E9%9D%A2)
+![渐变背景示例](./gradient.png)
 
 3. **网格笔记风格**
 
@@ -116,7 +117,7 @@ python generate_image.py "笔记风格封面" --grid --grid-color "#CCCCCC" --gr
 ```
 
 效果示意：
-![网格背景示例](https://dummyimage.com/400x600/ffffff/333333\&text=%E7%AC%94%E8%AE%B0%E9%A3%8E%E6%A0%BC)
+![网格背景示例](./outputs/grid.png)
 
 4. **文字高亮 + Emoji**
 
@@ -125,7 +126,7 @@ python generate_image.py "小红书封面" --highlight "封面" --highlight-colo
 ```
 
 效果示意：
-![高亮+Emoji示例](https://dummyimage.com/400x600/ff6b6b/ffffff\&text=%E5%B0%8F%E7%BA%A2%E4%B9%A6%E5%B0%81%E9%9D%A2)
+![高亮+Emoji示例](./outputs/highlight.png)
 
 > 注：示意图为占位图，实际生成图片以本工具输出为准。
 
