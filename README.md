@@ -41,8 +41,8 @@
 
 1.  **克隆仓库**:
     ```bash
-    git clone <repository_url>
-    cd <repository_directory>
+    git clone https://github.com/fgheng/xiaohongshu-wenzifengmian.git
+    cd https://github.com/fgheng/xiaohongshu-wenzifengmian.git
     ```
 
 2.  **安装依赖**:
