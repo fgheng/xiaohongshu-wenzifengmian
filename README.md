@@ -126,14 +126,22 @@ python main.py "笔记风格封面" --grid --grid-color "#CCCCCC" --grid-spacing
 4. **Emoji 码点输入与大小比例**
 
 ```bash
-python main.py "支持 Unicode 码点输入 🤓" --emoji-code "U+1F913" --emoji-size-scale 0.8 --emoji-position top --font fonts/thin/SmileySans-Oblique.otf --output ./outputs/emoji_nerd_codepoint.png --width 800 --height 600 --padding 60
+python main.py "支持 Unicode 码点输入 🤓" --emoji-code "U+1F913" --emoji-size-scale 0.8 --emoji-position top --font fonts/thin/SmileySans-Oblique.otf --output ./outputs/emoji_nerd_codepoint.png --width 360 --height 640 --padding 60 --padding-bottom 120
+```
+
+效果示意：
+![高亮+Emoji示例](./outputs/emoji_nerd_codepoint.png)
+
+
+5. **文字高亮**
+```bash
+python main.py "小红书文字高亮" --highlight "文字高亮" --text-color "#333333" --bg-color "#FF6B6B" --width 360 --height 640 --padding-bottom 180 --padding-bottom 120 --padding 30 --output ./outputs/highlight.png
 ```
 
 效果示意：
 ![高亮+Emoji示例](./outputs/highlight.png)
 
 > 注：示意图为占位图，实际生成图片以本工具输出为准。
-
 ---
 
 ## 推荐配色方案
