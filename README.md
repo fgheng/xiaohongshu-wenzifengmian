@@ -36,11 +36,22 @@
 
 ## 安装依赖
 
-```bash
-pip install pillow
-````
 
-> 注意：依赖 PIL（Python Imaging Library），安装 Pillow 即可。
+1.  **克隆仓库**:
+    ```bash
+    git clone <repository_url>
+    cd <repository_directory>
+    ```
+
+2.  **安装依赖**:
+    ```bash
+    pip install Pillow
+    ```
+
+3.  **准备字体**:
+    -   下载一款你喜欢的中文字体（例如[思源黑体](https://github.com/adobe-fonts/source-han-sans/releases/download/2.004R/SourceHanSans.ttc.zip)）。
+    -   在项目根目录下创建一个 `fonts` 文件夹，并将字体文件放入其中。
+    -   你可以根据需要组织字体文件，例如 `fonts/thin/SmileySans-Oblique.otf`。
 
 ---
 
@@ -127,13 +138,6 @@ python generate_image.py "小红书封面" --highlight "封面" --highlight-colo
 | 渐变   | `#FFB347` → `#FFCC33`             | 深灰 `#333333` |
 | 渐变   | `#6A82FB` → `#FC5C7D`             | 白色 `#FFFFFF` |
 
----
-
-## 字体说明
-
-* 请确保字体支持中文字符，否则中文无法显示。
-* 默认字体：`fonts/ZCOOLKuaiLe-Regular.ttf`
-* 可下载中文字体示例：[思源黑体](https://github.com/adobe-fonts/source-han-sans/releases/download/2.004R/SourceHanSans.ttc.zip)
 
 ---
 
@@ -143,3 +147,12 @@ python generate_image.py "小红书封面" --highlight "封面" --highlight-colo
 2. 高亮文字支持跨行，但需确保子文字在原文中存在。
 3. Emoji 渲染依赖系统字体，部分系统可能显示为方块。
 4. 输出目录默认 `outputs/`，生成 PNG 图片。
+
+
+## 贡献
+
+欢迎通过提交 Pull Request 来为此项目做出贡献。
+
+## 许可证
+
+本项目采用 [MIT](LICENSE) 许可证。
